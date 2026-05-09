@@ -18,7 +18,7 @@
 *{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:hidden}
-button,input,textarea{font:inherit}
+button,input,textarea,select{font:inherit}
 button{cursor:pointer}
 a{color:inherit}
 .app{height:100vh;display:grid;grid-template-columns:var(--sidebar-w) minmax(0,1fr);grid-template-rows:58px minmax(0,1fr)}
@@ -96,14 +96,24 @@ pre{margin:0;background:var(--code);border:1px solid var(--line);border-radius:1
 .tag.easy{color:var(--ok);border-color:rgba(49,208,125,.35)}.tag.medium{color:var(--warn);border-color:rgba(242,184,75,.38)}.tag.hard{color:var(--danger);border-color:rgba(255,107,107,.38)}.tag.done{color:var(--accent);border-color:rgba(33,199,168,.45)}
 .solve-pane{min-height:0;border:1px solid var(--line);background:rgba(17,24,39,.96);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;display:grid;grid-template-rows:auto minmax(0,1fr)}
 .question-area{min-height:0;overflow:auto;padding:15px}.prompt{color:var(--text);line-height:1.72;font-size:.98rem}.hint{border:1px solid var(--line);background:#0b1222;border-radius:9px;padding:10px;color:var(--muted);font-size:.85rem;line-height:1.55;margin-top:10px}
-.editor-area{min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) minmax(0,1fr);border-top:1px solid var(--line)}
+.editor-area{min-height:0;display:grid;grid-template-rows:auto minmax(360px,.95fr) minmax(280px,1fr);border-top:1px solid var(--line)}
 .editor-head,.result-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 13px;border-bottom:1px solid var(--line);background:#111a2e;font-weight:800}
 .actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--line2);color:var(--text);background:#162238;border-radius:8px;padding:8px 11px;font-size:.8rem;font-weight:800}.btn:hover{border-color:var(--accent2)}.btn.primary{background:linear-gradient(135deg,var(--accent),#62d68f);color:#06111f;border-color:transparent}.btn.ghost{background:transparent;color:var(--muted)}.btn.warn{border-color:rgba(242,184,75,.5);color:#ffd78d;background:rgba(242,184,75,.08)}
-textarea{width:100%;height:100%;min-height:300px;resize:none;border:0;outline:0;background:var(--code);color:#e6edf3;padding:16px;font-family:"JetBrains Mono",monospace;font-size:.88rem;line-height:1.65;tab-size:2}
-.result-body{min-height:0;overflow:auto;background:#0b1222;display:flex;flex-direction:column}.result-msg{padding:11px 13px;font-family:"JetBrains Mono",monospace;font-size:.78rem;border-bottom:1px solid var(--line)}.result-msg.ok{color:var(--ok)}.result-msg.err{color:var(--danger)}
+.sql-editor-wrap{position:relative;min-height:0;background:#070d18;display:grid;grid-template-rows:minmax(0,1fr) auto}
+.sql-editor{width:100%;height:100%;min-height:360px;border:0;outline:0;background:#070d18}
+.editor-status{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:7px 12px;border-top:1px solid var(--line);background:#0b1222;color:var(--muted);font-size:.74rem}
+.editor-status .status-ok{color:var(--ok)}.editor-status .status-warn{color:var(--warn)}.editor-status .status-err{color:var(--danger)}
+.query-running-line{background:rgba(33,199,168,.16);border-left:3px solid var(--accent)}
+.query-running-glyph{background:var(--accent);width:7px!important;margin-left:4px;border-radius:999px}
+.result-body{min-height:0;overflow:hidden;background:#0b1222;display:flex;flex-direction:column}.result-msg{padding:11px 13px;font-family:"JetBrains Mono",monospace;font-size:.78rem;border-bottom:1px solid var(--line)}.result-msg.ok{color:var(--ok)}.result-msg.err{color:var(--danger)}
 .result-msg.check-ok{color:var(--ok);background:rgba(49,208,125,.08)}
 .result-msg.check-warn{color:var(--warn);background:rgba(242,184,75,.08)}
 .check-detail{padding:10px 13px;color:var(--muted);font-size:.82rem;line-height:1.55;border-bottom:1px solid var(--line)}
+.result-tools{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border-bottom:1px solid var(--line);background:#0f172a;flex-wrap:wrap}
+.result-tools .meta{color:var(--muted);font-size:.78rem}.result-tools .actions{gap:6px}
+.result-grid-wrap{min-height:0;overflow:auto;flex:1}.result-grid th{resize:horizontal;overflow:auto;user-select:none;cursor:pointer}.result-grid td{cursor:copy}.result-grid tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+.pager{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.78rem}.pager button{padding:5px 8px}
+.copy-flash{background:rgba(33,199,168,.18)!important}
 .solution{display:none;border-top:1px solid var(--line);background:#10192b;padding:13px;max-height:260px;overflow:auto}.solution.show{display:block}.solution p{color:var(--muted);line-height:1.6;font-size:.86rem}
 .schema-workspace{position:sticky;top:16px;height:calc(100vh - 154px);min-height:0;border:1px solid var(--line);background:rgba(17,24,39,.96);border-radius:12px;box-shadow:var(--shadow);overflow:visible;display:grid;grid-template-rows:auto auto minmax(0,1fr)}
 .schema-workspace-inner{min-height:0;overflow:hidden;display:grid;grid-template-rows:auto auto minmax(0,1fr);border-radius:12px;height:100%}
@@ -126,7 +136,7 @@ textarea{width:100%;height:100%;min-height:300px;resize:none;border:0;outline:0;
 .link-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.link-card{display:block;border:1px solid var(--line);background:#10192b;border-radius:10px;padding:15px;text-decoration:none}.link-card:hover{border-color:var(--accent2);background:#14203a}.link-card h3{margin:0;font-size:.98rem}.link-card p{margin:0;color:var(--muted);font-size:.84rem;line-height:1.55}.source{color:var(--accent);font-size:.72rem;font-weight:800;margin-top:10px}
 .empty{padding:18px;color:var(--muted);line-height:1.6}.toast{position:fixed;right:18px;bottom:18px;border:1px solid var(--line2);background:#111a2e;color:var(--text);padding:11px 13px;border-radius:9px;box-shadow:var(--shadow);display:none;font-size:.84rem;z-index:20}.toast.show{display:block}
 @media(max-width:1180px){body{overflow:auto}.app{height:auto;min-height:100vh;grid-template-columns:1fr;grid-template-rows:auto auto}.sidebar{border-right:0;border-bottom:1px solid var(--line);grid-template-rows:auto auto}.topic-tree{max-height:360px}.grid-two,.practice-layout{grid-template-columns:1fr}.practice-layout{min-height:0}.solve-pane{min-height:880px}.schema-workspace{min-height:620px}.hero-photo-bg{width:54%;opacity:.55}.hero-code{position:relative;right:auto;bottom:auto;width:100%;margin:0 44px 36px;max-width:520px}}
-@media(max-width:680px){.topbar,.main-head{height:auto;align-items:flex-start;flex-direction:column}.top-actions{margin-left:0;flex-wrap:wrap}.content{padding:10px}.editor-head,.result-head{align-items:flex-start;flex-direction:column}textarea{font-size:.8rem}.hero-lab,.hero-content{min-height:620px}.hero-content{padding:28px}.hero-photo-bg{width:100%;opacity:.28}.hero-stats-grid{grid-template-columns:1fr 1fr}.hero-code{margin:0 24px 24px;width:auto}}
+@media(max-width:680px){.topbar,.main-head{height:auto;align-items:flex-start;flex-direction:column}.top-actions{margin-left:0;flex-wrap:wrap}.content{padding:10px}.editor-head,.result-head{align-items:flex-start;flex-direction:column}.hero-lab,.hero-content{min-height:620px}.hero-content{padding:28px}.hero-photo-bg{width:100%;opacity:.28}.hero-stats-grid{grid-template-columns:1fr 1fr}.hero-code{margin:0 24px 24px;width:auto}}
 </style>
 </head>
 <body>
@@ -180,6 +190,7 @@ textarea{width:100%;height:100%;min-height:300px;resize:none;border:0;outline:0;
 <div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.49.0/min/vs/loader.min.js"></script>
 <script>
 const DB_PREFIX_NOTE = "Local SQLite uses table names without Sales. prefix: Customers, Employees, Products, Orders, OrdersArchive.";
 const SCHEMA = {
@@ -426,6 +437,8 @@ const EXTRA_PRACTICE = [{"topic":"inner-join","difficulty":"Easy","title":"Retri
 EXTRA_PRACTICE.forEach(q=>PRACTICE.push(q));
 
 let db=null,currentTopic="inner-join",currentTab="home",currentQuestionId="inner-join-01",currentChapter="Combining Data";
+let sqlEditor=null,sqlEditorModel=null,sqlEditorQuestionId=null,monacoReady=null,monacoConfigured=false,validationTimer=null;
+let executingDecorationIds=[],resultState=null,currentEditorTheme=localStorage.getItem("sqlShalaEditorTheme")||"sql-shala-dark";
 const attempts=new Set(JSON.parse(localStorage.getItem("sqlNotesAttempts")||"[]"));
 const revealed=new Set();
 const $=id=>document.getElementById(id);
@@ -594,9 +607,12 @@ function renderPractice(){
         <div class="hint"><strong>Available tables:</strong> ${q.tables.join(", ")}<br><strong>Remember:</strong> ${DB_PREFIX_NOTE}</div>
       </div>
       <div class="editor-area">
-        <div class="editor-head"><span>SQL Editor</span><div class="actions"><button class="btn primary" id="runBtn">Run Query</button><button class="btn" id="starterBtn">Clear</button><button class="btn warn" id="solutionBtn">Reveal Solution</button></div></div>
-        <textarea id="sqlEditor" spellcheck="false" placeholder="-- Write your SQL here">${esc(localStorage.getItem("draft:"+q.id)||q.starterSql)}</textarea>
-        <div class="result-body"><div class="result-head"><span>Results</span><span class="tag">${attempts.has(q.id)?"Solution unlocked":"Run once to unlock solution"}</span></div><div id="resultBody"><div class="empty">Write your answer and click Run Query. Output will appear here.</div></div><div class="solution ${attempts.has(q.id)||revealed.has(q.id)?"show":""}" id="solutionBox">${solutionHtml(q)}</div></div>
+        <div class="editor-head"><span>SQL Editor</span><div class="actions"><button class="btn primary" id="runBtn">Run Query</button><button class="btn" id="formatBtn">Format Query</button><button class="btn" id="themeBtn">Theme</button><button class="btn" id="starterBtn">Clear</button><button class="btn warn" id="solutionBtn">Reveal Solution</button></div></div>
+        <div class="sql-editor-wrap">
+          <div id="sqlEditor" class="sql-editor"></div>
+          <div class="editor-status" id="editorStatus"><span>Loading professional SQL editor...</span></div>
+        </div>
+        <div class="result-body"><div class="result-head"><span>Results</span><span class="tag">${attempts.has(q.id)?"Solution unlocked":"Run once to unlock solution"}</span></div><div id="resultBody"><div class="empty">Write SQL and click Run Query. Select part of a script to run only that query.</div></div><div class="solution ${attempts.has(q.id)||revealed.has(q.id)?"show":""}" id="solutionBox">${solutionHtml(q)}</div></div>
       </div>
     </div>
     <aside class="schema-workspace">
@@ -619,9 +635,11 @@ function renderPractice(){
     document.querySelectorAll(".q-btn").forEach(b=>b.addEventListener("click",()=>{currentQuestionId=b.dataset.id;renderPractice();}));
   });
   $("runBtn").addEventListener("click",runQuery);
-  $("starterBtn").addEventListener("click",()=>{$("sqlEditor").value="";$("sqlEditor").focus();});
+  $("formatBtn").addEventListener("click",formatCurrentQuery);
+  $("themeBtn").addEventListener("click",cycleEditorTheme);
+  $("starterBtn").addEventListener("click",()=>{setEditorValue("");focusSqlEditor();});
   $("solutionBtn").addEventListener("click",()=>{revealed.add(q.id);$("solutionBox").classList.add("show");$("solutionBox").innerHTML=solutionHtml(q);toast("Solution revealed. Now try rewriting it once.");});
-  $("sqlEditor").addEventListener("keydown",handleEditorKeys);
+  initSqlEditor(q);
   setupSchemaResize();
 }
 function questionButton(item,idx){return `<button class="q-btn ${item.id===currentQuestionId?"active":""}" data-id="${item.id}"><div class="q-top"><span class="tag">${idx+1}</span><span class="tag ${item.difficulty.toLowerCase()}">${item.difficulty}</span>${attempts.has(item.id)?'<span class="tag done">tried</span>':""}</div><div class="q-title">${esc(item.title)}</div><div class="q-desc">${esc(item.tables.join(", "))}</div></button>`;}
@@ -673,9 +691,230 @@ function sampleOutputHtml(q){
 function loadExample(i){
   currentTab="practice";
   const ex=topicExamples(TOPIC[currentTopic])[i];
+  localStorage.setItem("draft:"+currentQuestionId,ex.sql);
   render();
-  $("sqlEditor").value=ex.sql;
-  $("sqlEditor").focus();
+  setTimeout(focusSqlEditor,120);
+}
+const SQL_KEYWORDS=["SELECT","FROM","WHERE","JOIN","INNER JOIN","LEFT JOIN","RIGHT JOIN","FULL JOIN","CROSS JOIN","ON","GROUP BY","ORDER BY","HAVING","UNION","UNION ALL","EXCEPT","INTERSECT","CASE","WHEN","THEN","ELSE","END","AS","DISTINCT","COUNT","SUM","AVG","MIN","MAX","ROUND","COALESCE","IFNULL","NULLIF","CAST","SUBSTR","LENGTH","LOWER","UPPER","TRIM","REPLACE","DATE","STRFTIME","JULIANDAY","OVER","PARTITION BY","ROWS BETWEEN","AND","OR","NOT","IS NULL","IS NOT NULL","IN","BETWEEN","LIKE","LIMIT"];
+const SQL_FUNCTIONS=["COUNT","SUM","AVG","MIN","MAX","ROUND","COALESCE","IFNULL","NULLIF","CAST","SUBSTR","LENGTH","LOWER","UPPER","TRIM","REPLACE","ABS","DATE","DATETIME","STRFTIME","JULIANDAY","ROW_NUMBER","RANK","DENSE_RANK","NTILE","LAG","LEAD","FIRST_VALUE","LAST_VALUE"];
+function ensureMonaco(){
+  if(monacoReady) return monacoReady;
+  monacoReady=new Promise((resolve,reject)=>{
+    if(!window.require){reject(new Error("Monaco loader is unavailable."));return;}
+    require.config({paths:{vs:"https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.49.0/min/vs"}});
+    require(["vs/editor/editor.main"],()=>{configureMonaco();resolve(window.monaco);},reject);
+  });
+  return monacoReady;
+}
+function configureMonaco(){
+  if(monacoConfigured||!window.monaco) return;
+  monacoConfigured=true;
+  monaco.editor.defineTheme("sql-shala-dark",{
+    base:"vs-dark",inherit:true,
+    rules:[
+      {token:"keyword.sql",foreground:"7dd3fc",fontStyle:"bold"},
+      {token:"string.sql",foreground:"fbbf24"},
+      {token:"number.sql",foreground:"a7f3d0"},
+      {token:"comment.sql",foreground:"6b7280",fontStyle:"italic"},
+      {token:"operator.sql",foreground:"c4b5fd"}
+    ],
+    colors:{"editor.background":"#070d18","editorLineNumber.foreground":"#526178","editorLineNumber.activeForeground":"#21c7a8","editorCursor.foreground":"#21c7a8","editor.selectionBackground":"#214f68","editorSuggestWidget.background":"#0f172a","editorSuggestWidget.border":"#26344f","editorWidget.background":"#0f172a","editorBracketMatch.background":"#1f3b57","editorBracketMatch.border":"#58a6ff"}
+  });
+  monaco.editor.defineTheme("sql-shala-dataghost",{
+    base:"vs-dark",inherit:true,
+    rules:[{token:"keyword.sql",foreground:"9cdcfe",fontStyle:"bold"},{token:"string.sql",foreground:"ce9178"},{token:"number.sql",foreground:"b5cea8"},{token:"comment.sql",foreground:"6a9955",fontStyle:"italic"}],
+    colors:{"editor.background":"#1e1e1e","editorLineNumber.foreground":"#858585","editorCursor.foreground":"#dcdcaa"}
+  });
+  monaco.editor.defineTheme("sql-shala-ssms",{
+    base:"vs",inherit:true,
+    rules:[{token:"keyword.sql",foreground:"0000ff",fontStyle:"bold"},{token:"string.sql",foreground:"a31515"},{token:"number.sql",foreground:"098658"},{token:"comment.sql",foreground:"008000",fontStyle:"italic"}],
+    colors:{"editor.background":"#f7f7f7","editorLineNumber.foreground":"#6b7280","editorCursor.foreground":"#111827"}
+  });
+  monaco.languages.registerCompletionItemProvider("sql",{
+    triggerCharacters:[".", " ", "\n"],
+    provideCompletionItems(model,position){
+      const word=model.getWordUntilPosition(position);
+      const range={startLineNumber:position.lineNumber,endLineNumber:position.lineNumber,startColumn:word.startColumn,endColumn:word.endColumn};
+      const text=model.getValue();
+      const aliases=extractAliases(text);
+      const suggestions=[];
+      SQL_KEYWORDS.forEach(k=>suggestions.push({label:k,kind:monaco.languages.CompletionItemKind.Keyword,insertText:k,range}));
+      SQL_FUNCTIONS.forEach(fn=>suggestions.push({label:fn+"()",kind:monaco.languages.CompletionItemKind.Function,insertText:fn+"($0)",insertTextRules:monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,range}));
+      Object.entries(SCHEMA).forEach(([name,t])=>{
+        suggestions.push({label:name,kind:monaco.languages.CompletionItemKind.Class,detail:"table",insertText:name,range});
+        t.columns.forEach(c=>suggestions.push({label:c,kind:monaco.languages.CompletionItemKind.Field,detail:`${name} column`,insertText:c,range}));
+      });
+      Object.entries(aliases).forEach(([alias,table])=>{
+        suggestions.push({label:alias,kind:monaco.languages.CompletionItemKind.Variable,detail:`alias for ${table}`,insertText:alias,range});
+        const columns=SCHEMA[table]?.columns||[];
+        columns.forEach(c=>suggestions.push({label:`${alias}.${c}`,kind:monaco.languages.CompletionItemKind.Field,detail:`${table}.${c}`,insertText:`${alias}.${c}`,range}));
+      });
+      return {suggestions};
+    }
+  });
+}
+async function initSqlEditor(q){
+  const host=$("sqlEditor");
+  if(!host) return;
+  const initial=localStorage.getItem("draft:"+q.id)||q.starterSql||"";
+  try{
+    await ensureMonaco();
+    if(sqlEditor){sqlEditor.dispose();sqlEditor=null;}
+    sqlEditorModel=monaco.editor.createModel(initial,"sql");
+    sqlEditor=monaco.editor.create(host,{
+      model:sqlEditorModel,
+      theme:currentEditorTheme,
+      automaticLayout:true,
+      fontFamily:"JetBrains Mono, Consolas, monospace",
+      fontSize:14,
+      lineHeight:24,
+      tabSize:4,
+      insertSpaces:true,
+      detectIndentation:false,
+      lineNumbers:"on",
+      minimap:{enabled:false},
+      bracketPairColorization:{enabled:true},
+      matchBrackets:"always",
+      guides:{bracketPairs:true,indentation:true},
+      wordWrap:"off",
+      scrollBeyondLastLine:false,
+      smoothScrolling:true,
+      cursorBlinking:"smooth",
+      cursorSmoothCaretAnimation:"on",
+      quickSuggestions:{other:true,comments:false,strings:false},
+      suggestOnTriggerCharacters:true,
+      acceptSuggestionOnEnter:"on",
+      formatOnPaste:false,
+      formatOnType:false
+    });
+    sqlEditorQuestionId=q.id;
+    registerEditorActions();
+    sqlEditor.onDidChangeModelContent(()=>{localStorage.setItem("draft:"+q.id,getEditorValue());scheduleSqlValidation();});
+    sqlEditor.onDidChangeCursorPosition(()=>scheduleSqlValidation(false));
+    scheduleSqlValidation();
+    updateEditorStatus("Ready. Ctrl+Enter/F5 runs SQL, Ctrl+Space opens suggestions, Ctrl+/ comments a line.","status-ok");
+  }catch(e){
+    host.innerHTML=`<div class="empty">Professional editor failed to load: ${esc(e.message)}</div>`;
+    updateEditorStatus("Editor load failed.","status-err");
+  }
+}
+function registerEditorActions(){
+  if(!sqlEditor||sqlEditor._sqlShalaActionsRegistered) return;
+  sqlEditor._sqlShalaActionsRegistered=true;
+  sqlEditor.addCommand(monaco.KeyMod.CtrlCmd|monaco.KeyCode.Enter,()=>runQuery());
+  sqlEditor.addCommand(monaco.KeyCode.F5,()=>runQuery());
+  sqlEditor.addCommand(monaco.KeyMod.Shift|monaco.KeyCode.Tab,()=>sqlEditor.trigger("keyboard","editor.action.outdentLines",{}));
+  sqlEditor.addCommand(monaco.KeyMod.CtrlCmd|monaco.KeyCode.Space,()=>sqlEditor.trigger("keyboard","editor.action.triggerSuggest",{}));
+  sqlEditor.addCommand(monaco.KeyMod.CtrlCmd|monaco.KeyCode.Slash,()=>sqlEditor.trigger("keyboard","editor.action.commentLine",{}));
+  sqlEditor.addCommand(monaco.KeyMod.CtrlCmd|monaco.KeyMod.Shift|monaco.KeyCode.KeyF,()=>formatCurrentQuery());
+  sqlEditor.addCommand(monaco.KeyMod.CtrlCmd|monaco.KeyCode.KeyY,()=>sqlEditor.trigger("keyboard","redo",{}));
+}
+function getEditorValue(){return sqlEditor?sqlEditor.getValue():"";}
+function setEditorValue(value){
+  if(sqlEditor){sqlEditor.setValue(value);localStorage.setItem("draft:"+currentQuestionId,value);scheduleSqlValidation();}
+}
+function focusSqlEditor(){if(sqlEditor) sqlEditor.focus();}
+function updateEditorStatus(message,cls=""){
+  const el=$("editorStatus");
+  if(el) el.innerHTML=`<span class="${cls}">${esc(message)}</span>`;
+}
+function cycleEditorTheme(){
+  const themes=["sql-shala-dark","sql-shala-dataghost","sql-shala-ssms"];
+  currentEditorTheme=themes[(themes.indexOf(currentEditorTheme)+1)%themes.length];
+  localStorage.setItem("sqlShalaEditorTheme",currentEditorTheme);
+  if(window.monaco) monaco.editor.setTheme(currentEditorTheme);
+  toast("Editor theme changed.");
+}
+function formatCurrentQuery(){
+  if(!sqlEditor) return;
+  const selection=sqlEditor.getSelection();
+  const selected=selection&&!selection.isEmpty()?sqlEditor.getModel().getValueInRange(selection):"";
+  const formatted=formatSql(selected||getEditorValue());
+  sqlEditor.executeEdits("format-query",[{range:selected?selection:sqlEditor.getModel().getFullModelRange(),text:formatted,forceMoveMarkers:true}]);
+  sqlEditor.pushUndoStop();
+  scheduleSqlValidation();
+}
+function formatSql(sql){
+  let text=sql.trim().replace(/\s+/g," ");
+  if(!text) return "";
+  const protectedStrings=[];
+  text=text.replace(/'([^']|'')*'/g,m=>{protectedStrings.push(m);return `__STR_${protectedStrings.length-1}__`;});
+  const clauses=["SELECT","FROM","WHERE","GROUP BY","HAVING","ORDER BY","UNION ALL","UNION","EXCEPT","INTERSECT","INNER JOIN","LEFT JOIN","RIGHT JOIN","FULL JOIN","CROSS JOIN","JOIN","ON","LIMIT"];
+  clauses.forEach(c=>{text=text.replace(new RegExp(`\\s+${c.replace(" ","\\s+")}\\s+`,"ig"),`\n${c} `);});
+  text=text.replace(/\s*,\s*/g,",\n    ").replace(/\s*(=|<>|!=|>=|<=|>|<|\+|-|\*|\/)\s*/g," $1 ");
+  text=text.replace(/\b(select|from|where|group by|having|order by|union all|union|except|intersect|inner join|left join|right join|full join|cross join|join|on|and|or|case|when|then|else|end|as|distinct|limit)\b/gi,m=>m.toUpperCase());
+  text=text.split("\n").map((line,i)=>{
+    const t=line.trim();
+    if(!t) return "";
+    if(i===0) return t;
+    return /^(FROM|WHERE|GROUP BY|HAVING|ORDER BY|UNION|EXCEPT|INTERSECT|INNER JOIN|LEFT JOIN|RIGHT JOIN|FULL JOIN|CROSS JOIN|JOIN|ON|LIMIT)\b/.test(t)?t:"    "+t;
+  }).join("\n");
+  protectedStrings.forEach((s,i)=>{text=text.replace(`__STR_${i}__`,s);});
+  return /;\s*$/.test(text)?text:text+";";
+}
+function extractAliases(sql){
+  const aliases={};
+  const tableNames=Object.keys(SCHEMA).join("|");
+  const re=new RegExp(`\\b(?:FROM|JOIN)\\s+(${tableNames})\\s+(?:AS\\s+)?([A-Za-z_][\\w]*)`,"gi");
+  let m;
+  while((m=re.exec(sql))) if(!/^(ON|WHERE|JOIN|INNER|LEFT|RIGHT|FULL|CROSS|GROUP|ORDER|HAVING|LIMIT)$/i.test(m[2])) aliases[m[2]]=m[1];
+  Object.keys(SCHEMA).forEach(t=>aliases[t]=t);
+  return aliases;
+}
+function scheduleSqlValidation(showStatus=true){
+  clearTimeout(validationTimer);
+  validationTimer=setTimeout(()=>validateSqlInEditor(showStatus),260);
+}
+function validateSqlInEditor(showStatus=true){
+  if(!sqlEditor||!window.monaco) return;
+  const model=sqlEditor.getModel();
+  const sql=model.getValue().trim();
+  const markers=[];
+  if(!sql){monaco.editor.setModelMarkers(model,"sql-shala",[]);updateEditorStatus("Ready.","status-ok");return;}
+  if(!db){updateEditorStatus("Database is loading. Validation will start when DB is ready.","status-warn");return;}
+  try{
+    statementRanges(sql).forEach(item=>{
+      if(!item.text.trim()) return;
+      const stmt=db.prepare(item.text);
+      stmt.free();
+    });
+    markers.push(...lintSql(sql,model));
+    monaco.editor.setModelMarkers(model,"sql-shala",markers);
+    if(showStatus) updateEditorStatus(markers.length?`${markers.length} warning${markers.length===1?"":"s"} found.`:"SQL looks valid.","status-ok");
+  }catch(e){
+    const marker=markerFromSqlError(e.message,model);
+    monaco.editor.setModelMarkers(model,"sql-shala",[marker]);
+    updateEditorStatus(`Line ${marker.startLineNumber}: ${e.message}`,"status-err");
+  }
+}
+function markerFromSqlError(message,model){
+  const near=message.match(/near "([^"]+)"/i)?.[1]||message.match(/no such column:\s*([^\s]+)/i)?.[1]||message.match(/no such table:\s*([^\s]+)/i)?.[1];
+  let range={startLineNumber:1,startColumn:1,endLineNumber:1,endColumn:2};
+  if(near){
+    const match=model.findMatches(near,false,false,true,null,true)[0];
+    if(match) range=match.range;
+  }
+  return {severity:monaco.MarkerSeverity.Error,message,startLineNumber:range.startLineNumber,startColumn:range.startColumn,endLineNumber:range.endLineNumber,endColumn:range.endColumn};
+}
+function lintSql(sql,model){
+  const markers=[];
+  const aliases=extractAliases(sql);
+  const aliasRefs=[...sql.matchAll(/\b([A-Za-z_]\w*)\s*\./g)].map(m=>m[1]);
+  aliasRefs.forEach(alias=>{
+    if(!aliases[alias]){
+      const match=model.findMatches(alias+".",false,false,true,null,true)[0];
+      if(match) markers.push({severity:monaco.MarkerSeverity.Error,message:`Undefined alias '${alias}'. Check your FROM/JOIN alias.`,startLineNumber:match.range.startLineNumber,startColumn:match.range.startColumn,endLineNumber:match.range.endLineNumber,endColumn:match.range.endColumn});
+    }
+  });
+  const selectLine=sql.match(/select\s+([A-Za-z_]\w*)\s+([A-Za-z_]\w*)\s+from/i);
+  if(selectLine){
+    const allCols=new Set(Object.values(SCHEMA).flatMap(t=>t.columns.map(c=>c.toLowerCase())));
+    if(allCols.has(selectLine[1].toLowerCase())&&allCols.has(selectLine[2].toLowerCase())){
+      const match=model.findMatches(selectLine[1]+" "+selectLine[2],false,false,true,null,true)[0];
+      if(match) markers.push({severity:monaco.MarkerSeverity.Warning,message:`Possible missing comma between '${selectLine[1]}' and '${selectLine[2]}'. If '${selectLine[2]}' is meant as an alias, use AS.`,startLineNumber:match.range.startLineNumber,startColumn:match.range.startColumn,endLineNumber:match.range.endLineNumber,endColumn:match.range.endColumn});
+    }
+  }
+  return markers;
 }
 async function initDB(){
   try{
@@ -727,10 +966,43 @@ function handleEditorKeys(e){
   }
 }
 function executableStatements(sql){
-  return sql
-    .split(";")
-    .map(statement=>statement.split("\n").filter(line=>!line.trim().startsWith("--")).join("\n").trim())
-    .filter(Boolean);
+  return statementRanges(sql).map(x=>x.text).filter(Boolean);
+}
+function statementRanges(sql){
+  const ranges=[];
+  let start=0,inSingle=false,inDouble=false,inLineComment=false,inBlockComment=false;
+  for(let i=0;i<sql.length;i++){
+    const ch=sql[i],next=sql[i+1];
+    if(inLineComment){if(ch==="\n") inLineComment=false;continue;}
+    if(inBlockComment){if(ch==="*"&&next==="/"){inBlockComment=false;i++;}continue;}
+    if(inSingle){if(ch==="'"&&next==="'"){i++;continue;}if(ch==="'") inSingle=false;continue;}
+    if(inDouble){if(ch==='"') inDouble=false;continue;}
+    if(ch==="-"&&next==="-"){inLineComment=true;i++;continue;}
+    if(ch==="/"&&next==="*"){inBlockComment=true;i++;continue;}
+    if(ch==="'"){inSingle=true;continue;}
+    if(ch==='"'){inDouble=true;continue;}
+    if(ch===";"){
+      const raw=sql.slice(start,i+1);
+      const text=stripSqlComments(raw).trim();
+      if(text) ranges.push({text,start,end:i+1});
+      start=i+1;
+    }
+  }
+  const raw=sql.slice(start);
+  const text=stripSqlComments(raw).trim();
+  if(text) ranges.push({text,start,end:sql.length});
+  return ranges;
+}
+function stripSqlComments(sql){
+  return sql.replace(/\/\*[\s\S]*?\*\//g,"").split("\n").filter(line=>!line.trim().startsWith("--")).join("\n");
+}
+function offsetToPosition(text,offset){
+  const before=text.slice(0,offset).split("\n");
+  return {lineNumber:before.length,column:before[before.length-1].length+1};
+}
+function rangeFromOffsets(text,start,end){
+  const s=offsetToPosition(text,start),e=offsetToPosition(text,end);
+  return new monaco.Range(s.lineNumber,s.column,e.lineNumber,e.column);
 }
 function executeLastResult(sql){
   let last=null;
@@ -739,6 +1011,19 @@ function executeLastResult(sql){
     if(res.length) last=res[res.length-1];
   });
   return last;
+}
+function executeSqlScript(sql){
+  const started=performance.now();
+  let last=null,rowsAffected=0,statementCount=0;
+  executableStatements(sql).forEach(statement=>{
+    statementCount++;
+    const before=db.getRowsModified();
+    const res=db.exec(statement);
+    const after=db.getRowsModified();
+    rowsAffected+=Math.max(0,after-before);
+    if(res.length) last=res[res.length-1];
+  });
+  return {last,rowsAffected,statementCount,elapsedMs:performance.now()-started};
 }
 function normalizeResult(result){
   if(!result) return {columns:[],rows:[]};
@@ -817,27 +1102,98 @@ function generateErrorHint(errorMsg, sql){
     <strong>🔧 How to fix it:</strong> ${fix}<br><br>
     <span style="color:var(--faint);font-size:.82rem">Try correcting your query and run it again. The solution is available via the "Reveal Solution" button when you need it.</span>`;
 }
+function selectedSqlForExecution(){
+  if(!sqlEditor) return {sql:"",range:null,selected:false};
+  const model=sqlEditor.getModel();
+  const selection=sqlEditor.getSelection();
+  if(selection&&!selection.isEmpty()) return {sql:model.getValueInRange(selection).trim(),range:selection,selected:true};
+  return {sql:model.getValue().trim(),range:model.getFullModelRange(),selected:false};
+}
+function highlightExecutingRange(range){
+  if(!sqlEditor||!range) return;
+  executingDecorationIds=sqlEditor.deltaDecorations(executingDecorationIds,[{range,options:{isWholeLine:true,className:"query-running-line",glyphMarginClassName:"query-running-glyph"}}]);
+  setTimeout(()=>{if(sqlEditor) executingDecorationIds=sqlEditor.deltaDecorations(executingDecorationIds,[]);},1200);
+}
+function renderExecutionSummary(check,exec,selected){
+  const rows=exec.last?exec.last.values.length:0;
+  return `<div class="result-msg ${check.ok?"check-ok":"check-warn"}">${esc(check.message)}</div><div class="check-detail">Executed ${selected?"selected SQL":"editor SQL"}: ${exec.statementCount} statement${exec.statementCount===1?"":"s"} in ${exec.elapsedMs.toFixed(1)} ms. Rows returned: ${rows}. Rows affected: ${exec.rowsAffected}.</div>`;
+}
+function renderResultGrid(columns,values,meta={}){
+  resultState={columns,values:[...values],page:0,pageSize:25,sortColumn:null,sortDir:1,meta};
+  drawResultGrid();
+}
+function drawResultGrid(){
+  if(!resultState||!$("resultBody")) return;
+  const total=resultState.values.length,maxPage=Math.max(0,Math.ceil(total/resultState.pageSize)-1);
+  resultState.page=Math.min(resultState.page,maxPage);
+  const start=resultState.page*resultState.pageSize;
+  const rows=resultState.values.slice(start,start+resultState.pageSize);
+  $("resultBody").innerHTML=`${resultState.meta.beforeHtml||""}<div class="result-tools"><div class="meta">${esc(resultState.meta.label||"Result grid")} • ${total} row${total===1?"":"s"} • ${esc(resultState.meta.time||"")}</div><div class="actions"><button class="btn ghost" id="csvBtn">Export CSV</button><div class="pager"><button class="btn ghost" id="prevPage">Prev</button><span>Page ${resultState.page+1} / ${maxPage+1}</span><button class="btn ghost" id="nextPage">Next</button></div></div></div><div class="result-grid-wrap"><table class="result-grid"><thead><tr>${resultState.columns.map((c,i)=>`<th data-c="${i}" title="Click to sort, drag edge to resize">${esc(c)}${resultState.sortColumn===i?(resultState.sortDir>0?" ▲":" ▼"):""}</th>`).join("")}</tr></thead><tbody>${rows.map((row,ridx)=>`<tr>${row.map((cell,cidx)=>`<td data-r="${start+ridx}" data-c="${cidx}" title="Click to copy">${cell===null?'<span style="color:var(--faint)">NULL</span>':esc(cell)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  $("csvBtn").addEventListener("click",exportResultCsv);
+  $("prevPage").addEventListener("click",()=>{resultState.page=Math.max(0,resultState.page-1);drawResultGrid();});
+  $("nextPage").addEventListener("click",()=>{resultState.page=Math.min(maxPage,resultState.page+1);drawResultGrid();});
+  document.querySelectorAll(".result-grid th").forEach(th=>th.addEventListener("click",()=>sortResultBy(Number(th.dataset.c))));
+  document.querySelectorAll(".result-grid td").forEach(td=>td.addEventListener("click",()=>copyResultCell(td)));
+}
+function sortResultBy(index){
+  if(!resultState) return;
+  resultState.sortDir=resultState.sortColumn===index?-resultState.sortDir:1;
+  resultState.sortColumn=index;
+  resultState.values.sort((a,b)=>{
+    const av=a[index],bv=b[index];
+    if(av===bv) return 0;
+    if(av===null) return 1;
+    if(bv===null) return -1;
+    const an=Number(av),bn=Number(bv);
+    const cmp=!Number.isNaN(an)&&!Number.isNaN(bn)?an-bn:String(av).localeCompare(String(bv));
+    return cmp*resultState.sortDir;
+  });
+  resultState.page=0;
+  drawResultGrid();
+}
+function copyResultCell(td){
+  const value=resultState?.values[Number(td.dataset.r)]?.[Number(td.dataset.c)];
+  navigator.clipboard?.writeText(value===null?"NULL":String(value));
+  td.classList.add("copy-flash");
+  setTimeout(()=>td.classList.remove("copy-flash"),450);
+  toast("Cell copied.");
+}
+function exportResultCsv(){
+  if(!resultState) return;
+  const escapeCsv=v=>v===null?"":`"${String(v).replace(/"/g,'""')}"`;
+  const csv=[resultState.columns.map(escapeCsv).join(","),...resultState.values.map(r=>r.map(escapeCsv).join(","))].join("\n");
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=`sql-shala-result-${Date.now()}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 function runQuery(){
-  const q=qById(currentQuestionId), sql=$("sqlEditor").value.trim();
+  const q=qById(currentQuestionId), picked=selectedSqlForExecution(), sql=picked.sql;
   if(!sql){$("resultBody").innerHTML='<div class="result-msg err">Please write a query first.</div>';return;}
   if(!db){$("resultBody").innerHTML='<div class="result-msg err">Database is still loading.</div>';return;}
   const statements=executableStatements(sql);
   if(!statements.length){$("resultBody").innerHTML='<div class="result-msg err">Please write a real SQL statement, not only comments.</div>';return;}
-  localStorage.setItem("draft:"+q.id,sql);
+  localStorage.setItem("draft:"+q.id,getEditorValue());
+  highlightExecutingRange(picked.range);
   try{
-    const last=executeLastResult(sql);
+    const exec=executeSqlScript(sql);
+    const last=exec.last;
     const expected=executeLastResult(q.solutionSql);
     const check=compareResults(last, expected);
-    attempts.add(q.id);localStorage.setItem("sqlNotesAttempts",JSON.stringify([...attempts]));renderProgress();renderPractice();
+    attempts.add(q.id);localStorage.setItem("sqlNotesAttempts",JSON.stringify([...attempts]));renderProgress();
+    if($("solutionBox")){$("solutionBox").classList.add("show");$("solutionBox").innerHTML=solutionHtml(q);}
     if(!last){
-      $("resultBody").innerHTML=`<div class="result-msg ${check.ok?"check-ok":"check-warn"}">${esc(check.message)}</div><div class="result-msg ok">Query executed successfully. No rows returned.</div>`;
+      $("resultBody").innerHTML=renderExecutionSummary(check,exec,picked.selected)+`<div class="result-msg ok">Query executed successfully. No rows returned.</div>`;
       return;
     }
-    let html=`<div class="result-msg ${check.ok?"check-ok":"check-warn"}">${esc(check.message)}</div><div class="check-detail">Correctness is checked by comparing your final result table with the stored expected solution. A valid alternate answer may need the same selected columns and row order to be marked correct.</div><div class="result-msg ok">${last.values.length} row${last.values.length===1?"":"s"} returned</div><div class="sample-wrap" style="max-height:none"><table><thead><tr>${last.columns.map(c=>`<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>`;
-    html+=last.values.map(row=>`<tr>${row.map(cell=>`<td>${cell===null?'<span style="color:var(--faint)">NULL</span>':esc(cell)}</td>`).join("")}</tr>`).join("")+"</tbody></table></div>";
-    $("resultBody").innerHTML=html;
+    const beforeHtml=renderExecutionSummary(check,exec,picked.selected)+`<div class="check-detail">Correctness is checked by comparing your final result table with the stored expected solution. A valid alternate answer may need the same selected columns and row order to be marked correct.</div>`;
+    renderResultGrid(last.columns,last.values,{label:check.ok?"Success":"Executed with check warning",time:`${exec.elapsedMs.toFixed(1)} ms`,beforeHtml});
   }catch(e){
-    const hint=generateErrorHint(e.message, $("sqlEditor").value.trim());
+    validateSqlInEditor();
+    const hint=generateErrorHint(e.message, getEditorValue());
     if($("resultBody")) $("resultBody").innerHTML=`<div class="result-msg err">Error: ${esc(e.message)}</div><div class="error-help">${hint}</div>`;
   }
 }
